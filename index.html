@@ -1,565 +1,433 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Li-Fi System | Light-Based Data Transfer</title>
-  <link rel="stylesheet" href="css/style.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Embedded Systems Quiz — 8051 | RTOS | IoT | Arduino</title>
+<style>
+:root {
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #1e293b;
+  --text-light: #64748b;
+  --border: #e2e8f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); }
+.container { max-width: 720px; margin: 0 auto; padding: 24px; }
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  margin-bottom: 20px;
+}
+h1 { font-size: 28px; margin-bottom: 8px; color: var(--primary-dark); }
+.subtitle { color: var(--text-light); margin-bottom: 24px; font-size: 15px; }
+.input-group { margin-bottom: 20px; }
+label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 14px; }
+input[type="text"] {
+  width: 100%; padding: 12px 16px; border: 2px solid var(--border);
+  border-radius: 10px; font-size: 16px; transition: border-color 0.2s;
+}
+input[type="text"]:focus { outline: none; border-color: var(--primary); }
+.btn {
+  display: inline-block; padding: 12px 28px; border: none; border-radius: 10px;
+  font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+.btn-secondary { background: var(--border); color: var(--text); margin-left: 10px; }
+.btn-secondary:hover { background: #cbd5e1; }
+.topic-badge {
+  display: inline-block; padding: 4px 12px; border-radius: 20px;
+  font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+.badge-8051 { background: #dbeafe; color: #1d4ed8; }
+.badge-rtos { background: #fce7f3; color: #be185d; }
+.badge-iot { background: #d1fae5; color: #047857; }
+.badge-arduino { background: #fef3c7; color: #b45309; }
+.question-text { font-size: 18px; font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+.options { display: flex; flex-direction: column; gap: 10px; }
+.option {
+  padding: 14px 18px; border: 2px solid var(--border); border-radius: 12px;
+  cursor: pointer; transition: all 0.15s; font-size: 15px; display: flex; align-items: center; gap: 10px;
+}
+.option:hover { border-color: var(--primary); background: #f5f3ff; }
+.option.selected { border-color: var(--primary); background: #ede9fe; }
+.option.correct { border-color: var(--success); background: #f0fdf4; }
+.option.wrong { border-color: var(--danger); background: #fef2f2; }
+.option-letter {
+  width: 28px; height: 28px; border-radius: 50%; background: var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; flex-shrink: 0;
+}
+.option.selected .option-letter { background: var(--primary); color: white; }
+.option.correct .option-letter { background: var(--success); color: white; }
+.option.wrong .option-letter { background: var(--danger); color: white; }
+.progress-bar {
+  height: 6px; background: var(--border); border-radius: 3px; margin-bottom: 24px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: var(--primary); border-radius: 3px;
+  transition: width 0.3s ease;
+}
+.quiz-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 20px; font-size: 14px; color: var(--text-light);
+}
+.result-card {
+  text-align: center; padding: 40px 32px;
+}
+.score-circle {
+  width: 140px; height: 140px; border-radius: 50%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  margin: 0 auto 24px; border: 6px solid var(--border);
+}
+.score-number { font-size: 42px; font-weight: 800; }
+.score-label { font-size: 14px; color: var(--text-light); }
+.score-excellent { border-color: var(--success); color: var(--success); }
+.score-good { border-color: var(--warning); color: var(--warning); }
+.score-poor { border-color: var(--danger); color: var(--danger); }
+.review-item {
+  text-align: left; margin-bottom: 20px; padding: 16px; border-radius: 12px;
+  border: 2px solid var(--border);
+}
+.review-item.correct-review { border-color: var(--success); background: #f0fdf4; }
+.review-item.wrong-review { border-color: var(--danger); background: #fef2f2; }
+.review-q { font-weight: 600; margin-bottom: 8px; }
+.review-ans { font-size: 14px; color: var(--text-light); }
+.review-ans strong { color: var(--success); }
+.hidden { display: none !important; }
+.fade-in { animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.student-name-display { font-weight: 700; color: var(--primary-dark); }
+.nav-buttons { display: flex; justify-content: space-between; margin-top: 24px; }
+.timer { font-weight: 700; color: var(--primary-dark); }
+</style>
 </head>
 <body>
 
-<!-- ═══════════════════════ NAVBAR ═══════════════════════ -->
-<nav class="navbar" id="navbar">
-  <div class="nav-brand">
-    <div class="nav-logo">
-      <div class="logo-pulse"></div>
-      <span class="logo-icon">⬡</span>
+<!-- START SCREEN -->
+<div id="start-screen" class="container fade-in">
+  <div class="card" style="text-align:center; padding: 48px 32px;">
+    <div style="font-size: 56px; margin-bottom: 16px;">🎓</div>
+    <h1>Embedded Systems Quiz</h1>
+    <p class="subtitle">Test your knowledge on 8051, RTOS, IoT & Arduino</p>
+    <div style="background: #f1f5f9; border-radius: 12px; padding: 16px; margin-bottom: 24px; text-align: left;">
+      <p style="font-weight:600; margin-bottom:8px;">📋 Quiz Rules:</p>
+      <ul style="padding-left: 20px; color: var(--text-light); font-size: 14px; line-height: 1.8;">
+        <li>20 questions across 4 topics</li>
+        <li>Each question carries 1 mark</li>
+        <li>No negative marking</li>
+        <li>Answers will be revealed after submission</li>
+        <li>Your scorecard will be displayed at the end</li>
+      </ul>
     </div>
-    <span class="brand-text">LI<span class="accent">FI</span>SYS</span>
+    <div class="input-group" style="max-width: 360px; margin: 0 auto 24px;">
+      <label for="student-name">Enter Your Full Name</label>
+      <input type="text" id="student-name" placeholder="e.g. Rahul Sharma" autocomplete="name">
+    </div>
+    <button class="btn btn-primary" onclick="startQuiz()">Start Quiz →</button>
+    <p id="name-error" style="color: var(--danger); margin-top: 12px; font-size: 14px; display: none;">Please enter your name to continue.</p>
   </div>
-  <ul class="nav-links">
-    <li><a href="#home" class="nav-link active">Home</a></li>
-    <li><a href="#architecture" class="nav-link">Architecture</a></li>
-    <li><a href="#dashboard" class="nav-link">Dashboard</a></li>
-    <li><a href="#monitoring" class="nav-link">Monitor</a></li>
-    <li><a href="#charts" class="nav-link">Analytics</a></li>
-  </ul>
-  <div class="nav-controls">
-    <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">
-      <span class="theme-icon">☀</span>
-    </button>
-    <div class="signal-indicator">
-      <span class="sig-dot"></span>
-      <span class="sig-dot"></span>
-      <span class="sig-dot"></span>
-      <span class="sig-label">LIVE</span>
-    </div>
-  </div>
-  <button class="hamburger" id="hamburger">☰</button>
-</nav>
+</div>
 
-<!-- ═══════════════════════ HERO / HOME ═══════════════════════ -->
-<section class="hero" id="home">
-  <div class="hero-bg-grid"></div>
-  <div class="photon-stream" id="photonStream"></div>
-
-  <div class="hero-content">
-    <div class="hero-badge">EMBEDDED SYSTEMS PROJECT</div>
-    <h1 class="hero-title">
-      <span class="title-line">Light Fidelity</span>
-      <span class="title-line accent-line">Data Transfer</span>
-      <span class="title-line">System</span>
-    </h1>
-    <p class="hero-subtitle">
-      Harnessing the power of visible light for ultra-fast, secure wireless communication through LED-based optical data transmission.
-    </p>
-    <div class="hero-stats">
-      <div class="stat-pill"><span class="stat-num">224</span><span class="stat-unit">Gbps</span><span class="stat-label">Max Speed</span></div>
-      <div class="stat-pill"><span class="stat-num">10K</span><span class="stat-unit">x</span><span class="stat-label">vs WiFi BW</span></div>
-      <div class="stat-pill"><span class="stat-num">100%</span><span class="stat-unit"></span><span class="stat-label">Secure</span></div>
+<!-- QUIZ SCREEN -->
+<div id="quiz-screen" class="container hidden">
+  <div class="card">
+    <div class="quiz-header">
+      <span>👤 <span id="display-name" class="student-name-display"></span></span>
+      <span class="timer">⏱️ <span id="timer">00:00</span></span>
     </div>
-    <div class="hero-cta">
-      <a href="#dashboard" class="btn btn-primary">Launch Dashboard</a>
-      <a href="#architecture" class="btn btn-outline">View Architecture</a>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div id="question-container"></div>
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" id="prev-btn" onclick="prevQuestion()" disabled>← Previous</button>
+      <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">Next →</button>
     </div>
   </div>
+</div>
 
-  <div class="hero-visual">
-    <div class="lifi-demo">
-      <div class="demo-led-tower">
-        <div class="tower-body">
-          <div class="tower-chip">MCU</div>
-          <div class="tower-pin"></div><div class="tower-pin"></div>
-        </div>
-        <div class="led-emitter" id="ledEmitter">
-          <div class="led-core"></div>
-          <div class="led-ring r1"></div>
-          <div class="led-ring r2"></div>
-          <div class="led-ring r3"></div>
-        </div>
-        <div class="light-beam" id="lightBeam">
-          <div class="beam-particle"></div>
-          <div class="beam-particle"></div>
-          <div class="beam-particle"></div>
-          <div class="beam-particle"></div>
-          <div class="beam-particle"></div>
-        </div>
+<!-- RESULT SCREEN -->
+<div id="result-screen" class="container hidden">
+  <div class="card result-card">
+    <div style="font-size: 48px; margin-bottom: 8px;">🏆</div>
+    <h1>Quiz Completed!</h1>
+    <p class="subtitle">Great effort, <span id="result-name" class="student-name-display"></span>!</p>
+    <div class="score-circle" id="score-circle">
+      <span class="score-number" id="score-number">0</span>
+      <span class="score-label">/ 20</span>
+    </div>
+    <p id="score-message" style="font-size: 18px; font-weight: 600; margin-bottom: 8px;"></p>
+    <p id="score-percentage" style="color: var(--text-light); margin-bottom: 24px;"></p>
+    <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 32px;">
+      <div style="background: #dbeafe; padding: 12px 20px; border-radius: 10px;">
+        <div style="font-size: 20px; font-weight: 700; color: #1d4ed8;" id="correct-count">0</div>
+        <div style="font-size: 12px; color: #64748b;">Correct</div>
       </div>
-      <div class="demo-channel">
-        <div class="channel-label">OPTICAL CHANNEL</div>
-        <div class="data-bits" id="dataBits"></div>
+      <div style="background: #fef2f2; padding: 12px 20px; border-radius: 10px;">
+        <div style="font-size: 20px; font-weight: 700; color: #dc2626;" id="wrong-count">0</div>
+        <div style="font-size: 12px; color: #64748b;">Wrong</div>
       </div>
-      <div class="demo-receiver">
-        <div class="photodiode-icon">⬡</div>
-        <div class="receiver-label">PHOTODIODE</div>
-        <div class="receiver-display" id="receiverDisplay">---</div>
+      <div style="background: #f1f5f9; padding: 12px 20px; border-radius: 10px;">
+        <div style="font-size: 20px; font-weight: 700; color: #475569;" id="unattempted-count">0</div>
+        <div style="font-size: 12px; color: #64748b;">Unattempted</div>
       </div>
     </div>
+    <button class="btn btn-primary" onclick="showReview()">Review Answers</button>
+    <button class="btn btn-secondary" onclick="restartQuiz()" style="margin-left: 10px;">Retake Quiz</button>
   </div>
-</section>
+  <div id="review-section" class="hidden"></div>
+</div>
 
-<!-- ═══════════════════════ LIFI OVERVIEW ═══════════════════════ -->
-<section class="overview-section" id="overview">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-tag">TECHNOLOGY</span>
-      <h2 class="section-title">What is <span class="accent">Li-Fi?</span></h2>
-    </div>
-    <div class="overview-grid">
-      <div class="overview-card">
-        <div class="ov-icon">◈</div>
-        <h3>Definition</h3>
-        <p>Li-Fi (Light Fidelity) is a bidirectional, high-speed, and fully networked wireless communication technology that uses visible light, ultraviolet, and infrared spectra for data transmission.</p>
-      </div>
-      <div class="overview-card">
-        <div class="ov-icon">◉</div>
-        <h3>How It Works</h3>
-        <p>Data is encoded by modulating the intensity of LED light at speeds imperceptible to the human eye. A photodiode receiver detects these fluctuations and decodes them back into binary data.</p>
-      </div>
-      <div class="overview-card">
-        <div class="ov-icon">◎</div>
-        <h3>vs Wi-Fi</h3>
-        <p>Li-Fi uses the visible light spectrum (400–800 THz) offering 10,000× more bandwidth than Wi-Fi's radio spectrum, making it ideal for high-density, interference-free environments.</p>
-      </div>
-    </div>
+<script>
+const questions = [
+  // 8051 (5 questions)
+  {
+    topic: "8051",
+    badgeClass: "badge-8051",
+    question: "What is the size of the internal RAM in a standard 8051 microcontroller?",
+    options: ["64 bytes", "128 bytes", "256 bytes", "512 bytes"],
+    answer: 1,
+    explanation: "The standard 8051 has 128 bytes of internal RAM (00H–7FH). The 8052 variant has 256 bytes."
+  },
+  {
+    topic: "8051",
+    badgeClass: "badge-8051",
+    question: "Which register bank is selected when RS1=0 and RS0=1 in the PSW?",
+    options: ["Bank 0", "Bank 1", "Bank 2", "Bank 3"],
+    answer: 1,
+    explanation: "RS1=0, RS0=1 selects Register Bank 1 (addresses 08H–0FH)."
+  },
+  {
+    topic: "8051",
+    badgeClass: "badge-8051",
+    question: "What is the function of the EA (External Access) pin in 8051?",
+    options: ["Enable ADC", "Select internal/external program memory", "Enable Timer interrupt", "Activate serial port"],
+    answer: 1,
+    explanation: "EA=1 executes from internal ROM; EA=0 fetches all program code from external memory."
+  },
+  {
+    topic: "8051",
+    badgeClass: "badge-8051",
+    question: "How many timers/counters does the standard 8051 have?",
+    options: ["1", "2", "3", "4"],
+    answer: 1,
+    explanation: "The standard 8051 has two 16-bit timers/counters: Timer 0 and Timer 1."
+  },
+  {
+    topic: "8051",
+    badgeClass: "badge-8051",
+    question: "Which interrupt has the highest priority in 8051?",
+    options: ["Timer 0", "External Interrupt 0 (INT0)", "Serial Port", "External Interrupt 1 (INT1)"],
+    answer: 1,
+    explanation: "External Interrupt 0 (INT0) has the highest priority with vector address 0003H."
+  },
+  // RTOS (5 questions)
+  {
+    topic: "RTOS",
+    badgeClass: "badge-rtos",
+    question: "In RTOS, what does 'preemptive scheduling' mean?",
+    options: ["Tasks run until completion", "Higher priority task can interrupt a lower priority task", "All tasks get equal time", "Tasks are scheduled randomly"],
+    answer: 1,
+    explanation: "Preemptive scheduling allows a higher-priority task to interrupt and take CPU from a lower-priority task."
+  },
+  {
+    topic: "RTOS",
+    badgeClass: "badge-rtos",
+    question: "What is a 'semaphore' used for in RTOS?",
+    options: ["Memory allocation", "Task synchronization and mutual exclusion", "Interrupt handling", "Power management"],
+    answer: 1,
+    explanation: "Semaphores are signaling mechanisms used for synchronization and protecting shared resources."
+  },
+  {
+    topic: "RTOS",
+    badgeClass: "badge-rtos",
+    question: "Which of the following is a popular open-source RTOS?",
+    options: ["Windows 11", "FreeRTOS", "macOS", "Ubuntu Desktop"],
+    answer: 1,
+    explanation: "FreeRTOS is a widely-used open-source real-time operating system for embedded systems."
+  },
+  {
+    topic: "RTOS",
+    badgeClass: "badge-rtos",
+    question: "What is 'priority inversion' in RTOS?",
+    options: ["A task with lower priority runs before a higher priority task", "All tasks have same priority", "Priority levels are inverted numerically", "Timer overflow issue"],
+    answer: 0,
+    explanation: "Priority inversion occurs when a lower-priority task holds a resource needed by a higher-priority task, causing delays."
+  },
+  {
+    topic: "RTOS",
+    badgeClass: "badge-rtos",
+    question: "What is the typical unit of time for task scheduling in RTOS?",
+    options: ["Seconds", "Milliseconds", "Ticks", "Minutes"],
+    answer: 2,
+    explanation: "RTOS scheduling is typically done in 'ticks', which are periodic timer interrupts (often 1 ms or configurable)."
+  },
+  // IoT (5 questions)
+  {
+    topic: "IoT",
+    badgeClass: "badge-iot",
+    question: "Which protocol is commonly used for lightweight IoT messaging?",
+    options: ["HTTP", "FTP", "MQTT", "SMTP"],
+    answer: 2,
+    explanation: "MQTT (Message Queuing Telemetry Transport) is a lightweight publish-subscribe protocol ideal for IoT."
+  },
+  {
+    topic: "IoT",
+    badgeClass: "badge-iot",
+    question: "What does 'Edge Computing' in IoT refer to?",
+    options: ["Cloud data storage", "Processing data near the source/device", "Internet backbone routing", "Sensor calibration"],
+    answer: 1,
+    explanation: "Edge Computing processes data locally on devices or gateways rather than sending everything to the cloud."
+  },
+  {
+    topic: "IoT",
+    badgeClass: "badge-iot",
+    question: "Which layer of IoT architecture handles data processing and analytics?",
+    options: ["Perception Layer", "Network Layer", "Application Layer", "Processing Layer"],
+    answer: 3,
+    explanation: "The Processing/Middleware Layer handles data processing, storage, and analytics before reaching applications."
+  },
+  {
+    topic: "IoT",
+    badgeClass: "badge-iot",
+    question: "Which wireless technology is best for low-power, short-range IoT devices?",
+    options: ["5G", "LoRa", "Bluetooth Low Energy (BLE)", "Satellite"],
+    answer: 2,
+    explanation: "BLE is optimized for low power consumption and short-range communication, ideal for battery-operated IoT devices."
+  },
+  {
+    topic: "IoT",
+    badgeClass: "badge-iot",
+    question: "What is the primary purpose of a Gateway in IoT?",
+    options: ["Store all IoT data permanently", "Translate protocols and connect devices to cloud", "Generate electrical power", "Replace sensors"],
+    answer: 1,
+    explanation: "An IoT gateway translates between device protocols and cloud protocols, and may perform local preprocessing."
+  },
+  // Arduino (5 questions)
+  {
+    topic: "Arduino",
+    badgeClass: "badge-arduino",
+    question: "What is the clock speed of an Arduino Uno (ATmega328P)?",
+    options: ["8 MHz", "16 MHz", "20 MHz", "32 MHz"],
+    answer: 1,
+    explanation: "The Arduino Uno operates at 16 MHz using an external crystal oscillator."
+  },
+  {
+    topic: "Arduino",
+    badgeClass: "badge-arduino",
+    question: "Which function runs repeatedly in an Arduino sketch?",
+    options: ["setup()", "loop()", "main()", "init()"],
+    answer: 1,
+    explanation: "The loop() function runs continuously after setup() completes, forming the main program flow."
+  },
+  {
+    topic: "Arduino",
+    badgeClass: "badge-arduino",
+    question: "What is the resolution of Arduino Uno's analog-to-digital converter (ADC)?",
+    options: ["8-bit", "10-bit", "12-bit", "16-bit"],
+    answer: 1,
+    explanation: "The ATmega328P has a 10-bit ADC, giving values from 0 to 1023."
+  },
+  {
+    topic: "Arduino",
+    badgeClass: "badge-arduino",
+    question: "Which pin on Arduino Uno supports hardware PWM?",
+    options: ["Pin 0", "Pin 3", "Pin 7", "Pin 13"],
+    answer: 1,
+    explanation: "Arduino Uno supports hardware PWM on pins 3, 5, 6, 9, 10, and 11 using analogWrite()."
+  },
+  {
+    topic: "Arduino",
+    badgeClass: "badge-arduino",
+    question: "What voltage level do Arduino Uno digital pins operate at?",
+    options: ["3.3V", "5V", "12V", "1.8V"],
+    answer: 1,
+    explanation: "Arduino Uno digital I/O pins operate at 5V logic levels (HIGH = 5V, LOW = 0V)."
+  }
+];
 
-    <!-- Advantages -->
-    <div class="section-header" style="margin-top:5rem">
-      <span class="section-tag">BENEFITS</span>
-      <h2 class="section-title">Why Choose <span class="accent">Li-Fi?</span></h2>
-    </div>
-    <div class="advantages-grid">
-      <div class="adv-item"><span class="adv-icon">⚡</span><h4>Ultra High Speed</h4><p>Up to 224 Gbps in lab conditions</p></div>
-      <div class="adv-item"><span class="adv-icon">🔒</span><h4>Secure</h4><p>Light can't penetrate walls — no eavesdropping</p></div>
-      <div class="adv-item"><span class="adv-icon">📶</span><h4>No Interference</h4><p>Immune to electromagnetic noise</p></div>
-      <div class="adv-item"><span class="adv-icon">🌊</span><h4>Underwater Use</h4><p>Works in EM-restricted environments</p></div>
-      <div class="adv-item"><span class="adv-icon">💡</span><h4>Dual Purpose</h4><p>LEDs serve as both light source & router</p></div>
-      <div class="adv-item"><span class="adv-icon">🏥</span><h4>Safe for Hospitals</h4><p>Zero RF radiation — no medical interference</p></div>
-    </div>
+let currentQ = 0;
+let answers = new Array(questions.length).fill(null);
+let studentName = "";
+let timerInterval;
+let seconds = 0;
 
-    <!-- Applications -->
-    <div class="section-header" style="margin-top:5rem">
-      <span class="section-tag">USE CASES</span>
-      <h2 class="section-title"><span class="accent">Applications</span></h2>
-    </div>
-    <div class="apps-grid">
-      <div class="app-card"><div class="app-num">01</div><div class="app-content"><h4>Aviation</h4><p>In-flight connectivity without RF interference</p></div></div>
-      <div class="app-card"><div class="app-num">02</div><div class="app-content"><h4>Hospitals</h4><p>Safe data transfer near medical equipment</p></div></div>
-      <div class="app-card"><div class="app-num">03</div><div class="app-content"><h4>Underwater</h4><p>Submarine communication systems</p></div></div>
-      <div class="app-card"><div class="app-num">04</div><div class="app-content"><h4>Smart Cities</h4><p>Street-light based IoT networks</p></div></div>
-      <div class="app-card"><div class="app-num">05</div><div class="app-content"><h4>Defense</h4><p>Secure military communications</p></div></div>
-      <div class="app-card"><div class="app-num">06</div><div class="app-content"><h4>Industry 4.0</h4><p>Factory automation and robotics</p></div></div>
-    </div>
-  </div>
-</section>
+function startQuiz() {
+  const nameInput = document.getElementById('student-name');
+  studentName = nameInput.value.trim();
+  if (!studentName) {
+    document.getElementById('name-error').style.display = 'block';
+    return;
+  }
+  document.getElementById('name-error').style.display = 'none';
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  document.getElementById('display-name').textContent = studentName;
+  currentQ = 0;
+  answers.fill(null);
+  seconds = 0;
+  startTimer();
+  renderQuestion();
+}
 
-<!-- ═══════════════════════ ARCHITECTURE ═══════════════════════ -->
-<section class="architecture-section" id="architecture">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-tag">DESIGN</span>
-      <h2 class="section-title">System <span class="accent">Architecture</span></h2>
-    </div>
-    <div class="arch-diagram">
-      <!-- Transmitter Side -->
-      <div class="arch-side transmitter-side">
-        <div class="side-label">TRANSMITTER</div>
-        <div class="arch-block" data-tooltip="ATmega328P / ESP32 microcontroller processes and encodes data">
-          <div class="block-icon">⬡</div>
-          <div class="block-name">Microcontroller</div>
-          <div class="block-sub">ATmega328P / ESP32</div>
-        </div>
-        <div class="arch-arrow down-arrow">↓</div>
-        <div class="arch-block" data-tooltip="Converts digital signals to LED-compatible current pulses">
-          <div class="block-icon">◈</div>
-          <div class="block-name">Driver Circuit</div>
-          <div class="block-sub">MOSFET Gate Driver</div>
-        </div>
-        <div class="arch-arrow down-arrow">↓</div>
-        <div class="arch-block led-block" data-tooltip="High-power LED modulated at MHz frequencies for data transmission">
-          <div class="block-icon led-blink">●</div>
-          <div class="block-name">LED Transmitter</div>
-          <div class="block-sub">High-Power LED Array</div>
-        </div>
-      </div>
+function startTimer() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    seconds++;
+    const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const s = String(seconds % 60).padStart(2, '0');
+    document.getElementById('timer').textContent = `${m}:${s}`;
+  }, 1000);
+}
 
-      <!-- Optical Channel -->
-      <div class="arch-channel">
-        <div class="channel-top-label">OPTICAL CHANNEL</div>
-        <div class="channel-beam">
-          <div class="beam-line"></div>
-          <div class="photon p1">⬡</div>
-          <div class="photon p2">⬡</div>
-          <div class="photon p3">⬡</div>
-          <div class="photon p4">⬡</div>
-          <div class="photon p5">⬡</div>
-        </div>
-        <div class="channel-specs">
-          <span>λ = 400–700nm</span>
-          <span>Speed: c</span>
-          <span>LoS Required</span>
-        </div>
-      </div>
+function renderQuestion() {
+  const q = questions[currentQ];
+  const container = document.getElementById('question-container');
+  const progress = ((currentQ + 1) / questions.length) * 100;
+  document.getElementById('progress-fill').style.width = progress + '%';
 
-      <!-- Receiver Side -->
-      <div class="arch-side receiver-side">
-        <div class="side-label">RECEIVER</div>
-        <div class="arch-block" data-tooltip="Converts light intensity variations back into electrical signals">
-          <div class="block-icon">◉</div>
-          <div class="block-name">Photodiode Receiver</div>
-          <div class="block-sub">PIN Photodiode</div>
-        </div>
-        <div class="arch-arrow down-arrow">↓</div>
-        <div class="arch-block" data-tooltip="Amplifies and processes the received optical signal">
-          <div class="block-icon">◎</div>
-          <div class="block-name">Signal Processor</div>
-          <div class="block-sub">Op-Amp + ADC</div>
-        </div>
-        <div class="arch-arrow down-arrow">↓</div>
-        <div class="arch-block" data-tooltip="Displays decoded message on LCD / OLED screen">
-          <div class="block-icon">▣</div>
-          <div class="block-name">Display Module</div>
-          <div class="block-sub">LCD 16×2 / OLED</div>
-        </div>
+  let html = `
+    <div class="fade-in">
+      <span class="topic-badge ${q.badgeClass}">${q.topic}</span>
+      <div class="question-text">Q${currentQ + 1}. ${q.question}</div>
+      <div class="options">
+  `;
+  q.options.forEach((opt, idx) => {
+    const selected = answers[currentQ] === idx ? 'selected' : '';
+    html += `
+      <div class="option ${selected}" onclick="selectOption(${idx})">
+        <span class="option-letter">${String.fromCharCode(65 + idx)}</span>
+        <span>${opt}</span>
       </div>
-    </div>
+    `;
+  });
+  html += `</div></div>`;
+  container.innerHTML = html;
 
-    <!-- Component Details -->
-    <div class="component-details">
-      <div class="comp-detail" onclick="toggleDetail(this)">
-        <div class="comp-header">
-          <span class="comp-icon">◉</span>
-          <span class="comp-name">LED Transmitter</span>
-          <span class="comp-toggle">+</span>
-        </div>
-        <div class="comp-body">
-          High-brightness LEDs are modulated at frequencies from 1 MHz to several hundred MHz. The intensity variations encode binary data — ON = 1, OFF = 0. OOK (On-Off Keying) or OFDM modulation techniques are used. The LED flickers too fast for human eyes to detect but is captured by the photodiode receiver.
-        </div>
-      </div>
-      <div class="comp-detail" onclick="toggleDetail(this)">
-        <div class="comp-header">
-          <span class="comp-icon">◈</span>
-          <span class="comp-name">Driver Circuit</span>
-          <span class="comp-toggle">+</span>
-        </div>
-        <div class="comp-body">
-          A MOSFET-based gate driver converts the microcontroller's 3.3V/5V PWM signal into high-current LED drive signals. It handles current regulation, protection, and ensures the LED operates within safe power limits while achieving maximum modulation bandwidth.
-        </div>
-      </div>
-      <div class="comp-detail" onclick="toggleDetail(this)">
-        <div class="comp-header">
-          <span class="comp-icon">⬡</span>
-          <span class="comp-name">Microcontroller</span>
-          <span class="comp-toggle">+</span>
-        </div>
-        <div class="comp-body">
-          The ATmega328P or ESP32 handles data encoding, UART communication, PWM generation for LED modulation, error correction, and protocol management. It serializes data into bit streams and manages the transmission timing with hardware timers for precision.
-        </div>
-      </div>
-      <div class="comp-detail" onclick="toggleDetail(this)">
-        <div class="comp-header">
-          <span class="comp-icon">◎</span>
-          <span class="comp-name">Photodiode Receiver</span>
-          <span class="comp-toggle">+</span>
-        </div>
-        <div class="comp-body">
-          A reverse-biased PIN photodiode converts incident photons into electrical current. An operational amplifier (transimpedance amplifier) converts this current to voltage. The signal is then digitized by the microcontroller's ADC for data decoding. Bandwidth: up to 1 GHz with proper design.
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+  document.getElementById('prev-btn').disabled = currentQ === 0;
+  const nextBtn = document.getElementById('next-btn');
+  if (currentQ === questions.length - 1) {
+    nextBtn.textContent = 'Submit Quiz ✓';
+    nextBtn.onclick = submitQuiz;
+  } else {
+    nextBtn.textContent = 'Next →';
+    nextBtn.onclick = nextQuestion;
+  }
+}
 
-<!-- ═══════════════════════ DASHBOARD ═══════════════════════ -->
-<section class="dashboard-section" id="dashboard">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-tag">CONTROL CENTER</span>
-      <h2 class="section-title">Data Transfer <span class="accent">Dashboard</span></h2>
-    </div>
+function selectOption(idx) {
+  answers[currentQ] = idx;
+  renderQuestion();
+}
 
-    <!-- Control Buttons -->
-    <div class="control-bar">
-      <button class="ctrl-btn start-btn" id="startBtn" onclick="startTransmission()">
-        <span class="btn-icon">▶</span> Start Transmission
-      </button>
-      <button class="ctrl-btn stop-btn" id="stopBtn" onclick="stopTransmission()" disabled>
-        <span class="btn-icon">■</span> Stop
-      </button>
-      <button class="ctrl-btn clear-btn" onclick="clearData()">
-        <span class="btn-icon">⊘</span> Clear Data
-      </button>
-      <button class="ctrl-btn export-btn" onclick="exportReport()">
-        <span class="btn-icon">↓</span> Export Report
-      </button>
-    </div>
-
-    <!-- Transfer Panels -->
-    <div class="transfer-grid">
-      <!-- Sender Panel -->
-      <div class="panel sender-panel">
-        <div class="panel-header">
-          <div class="panel-indicator tx"></div>
-          <h3>SENDER — TX</h3>
-          <div class="led-status" id="txLed"></div>
-        </div>
-        <div class="panel-body">
-          <label class="input-label">Message to Transmit</label>
-          <textarea class="msg-input" id="msgInput" placeholder="Enter message to send via Li-Fi..." maxlength="200" oninput="validateInput(this)"></textarea>
-          <div class="input-footer">
-            <span class="char-count" id="charCount">0/200</span>
-            <span class="validation-msg" id="validationMsg"></span>
-          </div>
-          <div class="encoding-display">
-            <label class="input-label">Binary Encoding</label>
-            <div class="binary-output" id="binaryOutput">— awaiting input —</div>
-          </div>
-          <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-            <span class="send-icon">⬡</span>
-            TRANSMIT VIA LED
-          </button>
-        </div>
-      </div>
-
-      <!-- Transmission Animation -->
-      <div class="transmission-visual">
-        <div class="tx-led-icon" id="txLedIcon">
-          <div class="tx-led-glow"></div>
-          <span>LED</span>
-        </div>
-        <div class="tx-beam-container">
-          <div class="tx-beam-line" id="txBeamLine"></div>
-          <div class="tx-photons" id="txPhotons"></div>
-        </div>
-        <div class="rx-pd-icon" id="rxPdIcon">
-          <span>PD</span>
-        </div>
-        <div class="tx-status-display" id="txStatusDisplay">
-          <div class="status-line">STATUS: <span id="txStatusText">IDLE</span></div>
-          <div class="status-line">RATE: <span id="txRateText">0 Mbps</span></div>
-          <div class="status-line">PKT: <span id="txPktText">#0</span></div>
-        </div>
-      </div>
-
-      <!-- Receiver Panel -->
-      <div class="panel receiver-panel">
-        <div class="panel-header">
-          <div class="panel-indicator rx"></div>
-          <h3>RECEIVER — RX</h3>
-          <div class="led-status" id="rxLed"></div>
-        </div>
-        <div class="panel-body">
-          <label class="input-label">Received Message</label>
-          <div class="received-display" id="receivedDisplay">
-            <div class="rx-placeholder">
-              <span class="rx-placeholder-icon">◉</span>
-              <span>Awaiting transmission...</span>
-            </div>
-          </div>
-          <div class="rx-meta" id="rxMeta" style="display:none">
-            <div class="meta-item"><span class="meta-label">Received At</span><span class="meta-val" id="rxTime">—</span></div>
-            <div class="meta-item"><span class="meta-label">Packet ID</span><span class="meta-val" id="rxPktId">—</span></div>
-            <div class="meta-item"><span class="meta-label">Checksum</span><span class="meta-val" id="rxChecksum">—</span></div>
-            <div class="meta-item"><span class="meta-label">Status</span><span class="meta-val success-text" id="rxStatus">—</span></div>
-          </div>
-          <div class="transmission-log">
-            <label class="input-label">Transmission Log</label>
-            <div class="log-box" id="logBox"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════ PERFORMANCE ═══════════════════════ -->
-<section class="monitoring-section" id="monitoring">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-tag">TELEMETRY</span>
-      <h2 class="section-title">Performance <span class="accent">Monitoring</span></h2>
-    </div>
-
-    <!-- Performance Gauges -->
-    <div class="perf-grid">
-      <div class="perf-card">
-        <div class="perf-label">DATA RATE</div>
-        <div class="perf-gauge" id="gaugeDataRate">
-          <svg viewBox="0 0 120 80" class="gauge-svg">
-            <path d="M10 70 A50 50 0 0 1 110 70" fill="none" stroke="var(--border)" stroke-width="8" stroke-linecap="round"/>
-            <path d="M10 70 A50 50 0 0 1 110 70" fill="none" stroke="var(--accent)" stroke-width="8" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="157" class="gauge-fill" id="gaugeDataRateFill"/>
-          </svg>
-          <div class="gauge-value"><span id="dataRateVal">0.0</span><span class="gauge-unit">Mbps</span></div>
-        </div>
-      </div>
-      <div class="perf-card">
-        <div class="perf-label">SIGNAL STRENGTH</div>
-        <div class="perf-gauge">
-          <svg viewBox="0 0 120 80" class="gauge-svg">
-            <path d="M10 70 A50 50 0 0 1 110 70" fill="none" stroke="var(--border)" stroke-width="8" stroke-linecap="round"/>
-            <path d="M10 70 A50 50 0 0 1 110 70" fill="none" stroke="#00ff88" stroke-width="8" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="157" class="gauge-fill" id="gaugeSigFill"/>
-          </svg>
-          <div class="gauge-value"><span id="signalVal">0</span><span class="gauge-unit">dBm</span></div>
-        </div>
-      </div>
-      <div class="perf-card">
-        <div class="perf-label">BIT ERROR RATE</div>
-        <div class="perf-value-large"><span id="berVal">0.000</span><span class="unit-small">%</span></div>
-        <div class="perf-bar-wrap"><div class="perf-bar-track"><div class="perf-bar-fill ber-fill" id="berBar"></div></div></div>
-      </div>
-      <div class="perf-card">
-        <div class="perf-label">TRANSFER TIME</div>
-        <div class="perf-value-large"><span id="xferTimeVal">0.00</span><span class="unit-small">ms</span></div>
-        <div class="perf-bar-wrap"><div class="perf-bar-track"><div class="perf-bar-fill time-fill" id="timeBar"></div></div></div>
-      </div>
-      <div class="perf-card">
-        <div class="perf-label">PACKET SUCCESS</div>
-        <div class="perf-value-large"><span id="pktSuccessVal">100</span><span class="unit-small">%</span></div>
-        <div class="perf-bar-wrap"><div class="perf-bar-track"><div class="perf-bar-fill success-fill" id="successBar" style="width:100%"></div></div></div>
-      </div>
-    </div>
-
-    <!-- Live Statistics Cards -->
-    <div class="section-header" style="margin-top:4rem">
-      <span class="section-tag">COUNTERS</span>
-      <h2 class="section-title">Live <span class="accent">Statistics</span></h2>
-    </div>
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon tx-icon">↑</div>
-        <div class="stat-info">
-          <div class="stat-num-big" id="totalSent">0</div>
-          <div class="stat-label-big">Total Packets Sent</div>
-        </div>
-        <div class="stat-sparkline" id="sparkSent"></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon rx-icon">↓</div>
-        <div class="stat-info">
-          <div class="stat-num-big" id="totalReceived">0</div>
-          <div class="stat-label-big">Total Packets Received</div>
-        </div>
-        <div class="stat-sparkline" id="sparkRx"></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon ok-icon">✓</div>
-        <div class="stat-info">
-          <div class="stat-num-big success-text" id="totalSuccess">0</div>
-          <div class="stat-label-big">Successful Transfers</div>
-        </div>
-        <div class="stat-sparkline" id="sparkOk"></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon fail-icon">✗</div>
-        <div class="stat-info">
-          <div class="stat-num-big fail-text" id="totalFailed">0</div>
-          <div class="stat-label-big">Failed Transfers</div>
-        </div>
-        <div class="stat-sparkline" id="sparkFail"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════ CHARTS ═══════════════════════ -->
-<section class="charts-section" id="charts">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-tag">ANALYTICS</span>
-      <h2 class="section-title">Real-Time <span class="accent">Charts</span></h2>
-    </div>
-    <div class="charts-grid">
-      <div class="chart-card wide">
-        <div class="chart-header">
-          <h3>Transmission Speed</h3>
-          <div class="chart-badge live-badge">● LIVE</div>
-        </div>
-        <canvas id="speedChart" height="120"></canvas>
-      </div>
-      <div class="chart-card">
-        <div class="chart-header">
-          <h3>Signal Strength</h3>
-          <div class="chart-badge">dBm</div>
-        </div>
-        <canvas id="signalChart" height="160"></canvas>
-      </div>
-      <div class="chart-card">
-        <div class="chart-header">
-          <h3>Packet Delivery</h3>
-          <div class="chart-badge">%</div>
-        </div>
-        <canvas id="packetChart" height="160"></canvas>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════ MESSAGE HISTORY ═══════════════════════ -->
-<section class="history-section" id="history">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-tag">SESSION STORAGE</span>
-      <h2 class="section-title">Message <span class="accent">History</span></h2>
-    </div>
-    <div class="history-controls">
-      <span class="history-note">⚠ Stored in session only — cleared on tab close</span>
-      <button class="btn-small" onclick="clearHistory()">Clear History</button>
-    </div>
-    <div class="history-table-wrap">
-      <table class="history-table" id="historyTable">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Timestamp</th>
-            <th>Message</th>
-            <th>Packets</th>
-            <th>Rate</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="historyBody">
-          <tr class="empty-row">
-            <td colspan="6">No transmissions yet. Send a message to get started.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <span class="brand-text">LI<span class="accent">FI</span>SYS</span>
-      <p>Light Fidelity Data Transfer System<br>Embedded Systems Mini Project</p>
-    </div>
-    <div class="footer-info">
-      <div class="footer-col">
-        <h5>Technology</h5>
-        <ul>
-          <li>Visible Light Communication</li>
-          <li>OOK / OFDM Modulation</li>
-          <li>IEEE 802.11bb Standard</li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h5>Components</h5>
-        <ul>
-          <li>ATmega328P / ESP32</li>
-          <li>PIN Photodiode</li>
-          <li>High-Power LED Array</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2025 Li-Fi Embedded System Project — Built with ⚡ & Light</span>
-  </div>
-</footer>
-
-<script src="js/script.js"></script>
-</body>
-</html>
+function nextQuestion() {
+  if (currentQ < questions
